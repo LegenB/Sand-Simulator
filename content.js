@@ -8,7 +8,7 @@ function setup() {
     cols = width / w;
     rows = height / w;
     grid = CreateArray(cols, rows);
-
+   
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             grid[i][j] = 0;
@@ -39,13 +39,16 @@ function draw() {
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let state = grid[i][j];
-
+            
             if (state === 1) {
                 let below = grid[i][j + 1] 
-                if (below === 0) {
+                if (below === 0 && j < rows - 1) {
                     nextGrid[i][j] = 0;
                     nextGrid[i][j + 1] = 1
                      
+                }
+                else{
+                    nextGrid[i][j]= 1;
                 }
             }
         }
@@ -67,6 +70,12 @@ function CreateArray(cols, rows) {
     }
   
   return arr;
+}
+// p5.js mouseDragged() es llamada cada vez que el ratón se mueve y un botón del ratón está siendo presionado
+function mouseDragged() {
+    let col = floor(mouseX / w);
+    let row = floor(mouseY / w);
+    grid[col][row]= 1;
 }
 
 
