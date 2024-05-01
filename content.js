@@ -4,7 +4,7 @@ let cols, rows;
 
 // setup() es ejecutado una vez, cuando el programa empieza
 function setup() {
-    createCanvas(400,400);
+    createCanvas(500,500);
     cols = width / w;
     rows = height / w;
     grid = CreateArray(cols, rows);
@@ -16,7 +16,7 @@ function setup() {
         }
         
     }
-    grid[10][0] = 1
+
     
 }
 // La función draw() es ejecutada después de setup()
@@ -25,7 +25,7 @@ function draw() {
 
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-            stroke(255); //Borde Blanco
+            noStroke()//Borde Blanco
             fill( grid[i][j]*255);
             let x = i * w;
             let y = j * w;
@@ -38,14 +38,34 @@ function draw() {
     let nextGrid = CreateArray(cols,rows);
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-            let state = grid[i][j];
-            
+            let state = grid[i][j]; // state es la posicion del Arreglo       
             if (state === 1) {
-                let below = grid[i][j + 1] 
-                if (below === 0 && j < rows - 1) {
+                let below = grid[i][j + 1];
+
+                let dir = random([-1,1]);
+                let belowA
+                let belowB
+                if (i + dir >= 0 && i+ dir <= cols - 1) {
+                    belowA = grid[i + dir][j + 1];         
+                }
+                if (i - dir >= 0 && i- dir <= cols - 1) {
+                    belowB = grid[i - dir][j + 1];
+                }
+                
+                
+                
+                
+                if (below === 0 ) {
                     nextGrid[i][j] = 0;
-                    nextGrid[i][j + 1] = 1
-                     
+                    nextGrid[i][j + 1] = 1                 
+                }
+                else if(belowA === 0){
+                    nextGrid[i][j] = 0;
+                    nextGrid[i + dir][j + 1]= 1;
+                }
+                else if(belowB === 0){
+                    nextGrid[i][j] = 0;
+                    nextGrid[i - dir][j + 1]= 1;
                 }
                 else{
                     nextGrid[i][j]= 1;
@@ -75,7 +95,10 @@ function CreateArray(cols, rows) {
 function mouseDragged() {
     let col = floor(mouseX / w);
     let row = floor(mouseY / w);
-    grid[col][row]= 1;
+    if (col >= 0 && col <= cols-1 && row >=0 && row <= rows-1) {
+        grid[col][row]= 1;
+    }
+    
 }
 
 
