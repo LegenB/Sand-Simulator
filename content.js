@@ -1,10 +1,13 @@
 let grid;
 let w = 10;
 let cols, rows;
+let hueValue = 200;//Para el color de la arena
+
 
 // setup() es ejecutado una vez, cuando el programa empieza
 function setup() {
-    createCanvas(500,500);
+    createCanvas(400,400);
+    colorMode(HSB,360,200,255);
     cols = width / w;
     rows = height / w;
     grid = CreateArray(cols, rows);
@@ -15,31 +18,34 @@ function setup() {
             
         }
         
-    }
-
-    
+    } 
 }
+
 // La función draw() es ejecutada después de setup()
 function draw() {
     background(0);//La función background() define el color usado como fondo del lienzo de p5.js
-
+    
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             noStroke()//Borde Blanco
-            fill( grid[i][j]*255);
-            let x = i * w;
-            let y = j * w;
-            square(x,y,w);
+            if (grid[i][j] >0) {
+                fill( grid[i][j], 255, 255);
+                let x = i * w;
+                let y = j * w;
+                square(x,y,w);
+                
+            }
+            
             
         }
     }
-
+    
     //Generar el siguiente gird para mover la arena
     let nextGrid = CreateArray(cols,rows);
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let state = grid[i][j]; // state es la posicion del Arreglo       
-            if (state === 1) {
+            if (state > 0) {
                 let below = grid[i][j + 1];
 
                 let dir = random([-1,1]);
@@ -50,25 +56,20 @@ function draw() {
                 }
                 if (i - dir >= 0 && i- dir <= cols - 1) {
                     belowB = grid[i - dir][j + 1];
-                }
-                
-                
-                
-                
+                }   
+                          
                 if (below === 0 ) {
-                    nextGrid[i][j] = 0;
-                    nextGrid[i][j + 1] = 1                 
+                    
+                    nextGrid[i][j + 1] = grid[i][j]                 
                 }
                 else if(belowA === 0){
-                    nextGrid[i][j] = 0;
-                    nextGrid[i + dir][j + 1]= 1;
+                    nextGrid[i + dir][j + 1]= grid[i][j];
                 }
-                else if(belowB === 0){
-                    nextGrid[i][j] = 0;
-                    nextGrid[i - dir][j + 1]= 1;
+                else if(belowB === 0){                
+                    nextGrid[i - dir][j + 1]= grid[i][j];
                 }
                 else{
-                    nextGrid[i][j]= 1;
+                    nextGrid[i][j]= grid[i][j];
                 }
             }
         }
@@ -96,9 +97,26 @@ function mouseDragged() {
     let col = floor(mouseX / w);
     let row = floor(mouseY / w);
     if (col >= 0 && col <= cols-1 && row >=0 && row <= rows-1) {
-        grid[col][row]= 1;
+        grid[col][row]= hueValue;
+
     }
-    
+    hueValue += 1;
+    if (hueValue > 360) {
+        hueValue = 1;
+    }
+}
+
+function mouseClicked() {
+    let col = floor(mouseX / w);
+    let row = floor(mouseY / w);
+    if (col >= 0 && col <= cols-1 && row >=0 && row <= rows-1) {
+        grid[col][row]= hueValue;
+
+    }
+    hueValue += 1;
+    if (hueValue > 360) {
+        hueValue = 1;
+    }
 }
 
 
